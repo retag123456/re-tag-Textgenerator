@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Produkttext Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; }
+    label { display: block; margin-top: 10px; }
+    input, textarea { width: 100%; padding: 8px; margin: 5px 0; }
+    #result { margin-top: 20px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Produkttext Generator</h1>
+  
+  <form id="productForm">
+    <label for="projectOrigin">Beschreibe die Entstehung des Projektes:</label>
+    <textarea id="projectOrigin" name="projectOrigin" rows="4"></textarea><br>
+
+    <label for="processDescription">Beschreibe den Prozess vom Problem, über den Projektauftrag, die Umsetzung und die Auslieferung:</label>
+    <textarea id="processDescription" name="processDescription" rows="4"></textarea><br>
+
+    <label for="productionProcess">Beschreibe den Herstellungsprozess des Produktes:</label>
+    <textarea id="productionProcess" name="productionProcess" rows="4"></textarea><br>
+
+    <label for="recycling">Beschreibe, wie das Produkt weiter up- oder recycelt werden könnte:</label>
+    <textarea id="recycling" name="recycling" rows="4"></textarea><br>
+
+    <input type="button" value="Text generieren" onclick="generateText()">
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    async function generateText() {
+      const projectOrigin = document.getElementById("projectOrigin").value;
+      const processDescription = document.getElementById("processDescription").value;
+      const productionProcess = document.getElementById("productionProcess").value;
+      const recycling = document.getElementById("recycling").value;
+
+      const prompt = `Erstelle einen Text über das Produkt. 
+      1. Beschreibe die Entstehung des Projektes: ${projectOrigin}.
+      2. Beschreibe den Prozess vom Problem, über den Projektauftrag, die Umsetzung und die Auslieferung: ${processDescription}.
+      3. Beschreibe den Herstellungsprozess des Produktes: ${productionProcess}.
+      4. Beschreibe, wie das Produkt weiter up- oder recycelt werden könnte: ${recycling}.`;
+
+      const response = await fetch("https://api.openai.com/v1/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer DEIN_OPENAI_API_KEY`
+        },
+        body: JSON.stringify({
+          model: "gpt-4",
+          prompt: prompt,
+          max_tokens: 500,
+          temperature: 0.7
+        })
+      });
+
+      const data = await response.json();
+      document.getElementById("result").innerText = data.choices[0].text;
+    }
+  </script>
+</body>
+</html>
