@@ -15,7 +15,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background-color: #3e8070; /* Ähnlich wie die Farbe im Bild */
+      background-color: #3e8070;
     }
 
     .container {
@@ -29,14 +29,14 @@
 
     h1 {
       text-align: center;
-      color: #3e8070; /* Farbe des Headers anpassen */
+      color: #3e8070;
       margin-bottom: 20px;
     }
 
     label {
       font-weight: bold;
       margin-top: 15px;
-      color: #3e8070; /* Label in der passenden Farbe */
+      color: #3e8070;
     }
 
     textarea {
@@ -52,7 +52,7 @@
     input[type="button"] {
       width: 100%;
       padding: 12px;
-      background-color: #6faea4; /* Ähnlich wie der Button im Bild */
+      background-color: #6faea4;
       color: white;
       border: none;
       border-radius: 30px;
@@ -106,11 +106,39 @@
       const productionProcess = document.getElementById("productionProcess").value;
       const recycling = document.getElementById("recycling").value;
 
-      const prompt = `Erstelle einen Text über das Produkt. 
-      1. Beschreibe die Entstehung des Projektes: ${projectOrigin}.
-      2. Beschreibe den Prozess vom Problem, über den Projektauftrag, die Umsetzung und die Auslieferung: ${processDescription}.
-      3. Beschreibe den Herstellungsprozess des Produktes: ${productionProcess}.
-      4. Beschreibe, wie das Produkt weiter up- oder recycelt werden könnte: ${recycling}.`;
+      // Vorgaben für die Abschnitte
+      const introLength = "Die Einführung sollte etwa 430 Zeichen umfassen.";
+      const exampleIntro = `Was passiert mit euren alten Uniformen und Stoffmasken? Die einfachste Lösung für viele Unternehmen wäre: Ab auf den Müll. Wir von re:flair finden das echt schade, genauso wie die Saubermacher. Darum haben wir uns zusammengetan und an einer Lösung getüftelt. Was dabei herausgekommen ist? Eine nachhaltige Umhängetasche, die nicht nur cool aussieht, sondern auch aus alten Materialien, die sonst auf dem Müll gelandet wären, genäht wurde. Wir glauben an die Kraft des Recyclings und wollen gemeinsam mit unseren Partnern neue Maßstäbe in der Kreislaufwirtschaft setzen.`;
+
+      const processPoints = `Beschreibung des Prozesses:
+      1. Idee: Alles an Arbeitskleidung muss dank neuer Vorschriften ausgetauscht werden - was jetzt, fragten die Saubermacher. re:flair hat die Herausforderung gerne angenommen. 
+      2. Konzept: Unser Ziel bei re:flair ist es, aus vermeintlichem Müll neue, coole Produkte zu schaffen. Gemeinsam mit den Saubermachern haben wir ein Konzept für die alten Textilien entwickelt – von der Arbeitshose zur Tasche, sozusagen.
+      3. Umsetzung: Nachdem das Konzept stand, ging es ans Produzieren. Gemeinsam mit unserer Partner-Werkstatt „Die Kümmerei“ übernehmen wir den Produktionsschritt komplett für die Saubermacher.
+      4. Auslieferung: Sobald die Taschen fertig sind, werden sie sicher verpackt und direkt an die Saubermacher geliefert. Sie sind fix und fertig einsatzbereit für neue, tragbare Herausforderungen im Alltag.`;
+
+      const productionInfo = `Eure alten Uniformen und Stoffmasken werden zunächst gründlich gereinigt und sorgfältig zugeschnitten. Anschließend wird das Material in Patchwork-Technik mit einer 4-Faden-Overlock-Maschine vernäht – das sorgt dafür, dass die Taschen jedem Tragegewicht, Wetter und Einsatzgebiet gewachsen sind. Die Hosenbunde dienen als robuste Tragegriffe, während die Brusttaschen der Jacken zu praktischen Innenfächern umfunktioniert werden. Jedes Teil wird mit hochwertigem Baumwollgarn verarbeitet und trägt stolz unser re:flair-Logo.`;
+
+      const recyclingTips = `Einleitung zum Recycling: Auch wenn es uns von re:flair ein bisschen traurig macht, kann es natürlich sein, dass du deine Tasche irgendwann nicht mehr brauchst. Da uns Nachhaltigkeit am Herzen liegt, wollen wir dir zeigen, wie du die Tasche wiederverwenden kannst:
+      1. Spende die Tasche, um jemand anderem eine Freude zu machen. So verlängerst du den Lebenszyklus und trägst aktiv zur Reduzierung von Abfall bei.
+      2. Verwende die Tasche als Aufbewahrungslösung, zum Beispiel im Kleiderschrank, um Kleinigkeiten zu verstauen.
+      3. Bring die Tasche in ein Altstoffzentrum, damit sie korrekt entsorgt und recycelt werden kann.`;
+
+      // Prompt mit Vorgaben für GPT-4
+      const prompt = `Erstelle einen Produkttext mit den folgenden Vorgaben:
+
+      Abschnitt 1: ${introLength}. Nutze diesen Beispieltext als Inspiration: ${exampleIntro}.
+
+      Abschnitt 2: ${processPoints}.
+
+      Abschnitt 3: Beschreibung des Herstellungsprozesses: ${productionInfo}.
+
+      Abschnitt 4: Informationen zum Thema Recycling und Upcycling: ${recyclingTips}.
+
+      Eingaben des Auftraggebers:
+      1. Entstehung des Projekts: ${projectOrigin}.
+      2. Beschreibung des Prozesses: ${processDescription}.
+      3. Herstellungsprozess: ${productionProcess}.
+      4. Recycling- und Upcycling-Ideen: ${recycling}.`;
 
       const response = await fetch("https://api.openai.com/v1/completions", {
         method: "POST",
