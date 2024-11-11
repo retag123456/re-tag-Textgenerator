@@ -136,13 +136,11 @@
         3. Herstellungsprozess: ${productionProcess}.
         4. Recycling- und Upcycling-Ideen: ${recycling}.`;
 
-        curl https://api.openai.com/v1/chat/completions \
-
         const response = await fetch("https://api.openai.com/v1/completions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer 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"
+            "Authorization": `Bearer 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`
           },
           body: JSON.stringify({
                model: "text-davinci-003", 
