@@ -1,21 +1,30 @@
-<!DOCTYPE html>
 // api/generateText.js
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
+    // CORS-Header setzen, um Anfragen von anderen Domains zu erlauben
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        // Bei vorgeprüften (preflight) Anfragen wird nur der CORS-Header zurückgegeben
+        return res.status(200).end();
+    }
+
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
 
     const { prompt } = req.body;
-    const apiKey = process.env.OPENAI_API_KEY;  // Umgebungsvariable für den API-Schlüssel
+    const apiKey = process.env.OPENAI_API_KEY;
 
     try {
         const response = await fetch('https://api.openai.com/v1/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`,  // API-Schlüssel verwenden
+                'Authorization': `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
                 model: "text-davinci-003",
@@ -26,7 +35,9 @@ export default async function handler(req, res) {
         });
 
         const data = await response.json();
-        res.status(200).json(data);  // Antwort zurück an den Aufrufer
+        res.status(200).json(data);  // Antwort an den Aufrufer zurückgeben
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+}
+
